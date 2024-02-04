@@ -1,30 +1,29 @@
-const keys = document.querySelectorAll(".keys__item");
+const keys = Array.from(document.querySelectorAll(".keys__item"));
 
 function playSound(e) {
   const audio = document.querySelector(
     `.keys__audio-item[data-key="${e.code}"]`
   );
-  if (audio) {
+  try {
     audio.currentTime = 0;
     audio.play();
-    Array.from(keys).map((item) => {
+    keys.map((item) => {
       if (item.dataset.key == e.code) {
         item.classList.add("keys__kilcked");
       }
     });
-  } else {
-    return;
+  } catch (err) {
+    console.log(err);
   }
 }
 
 function deleteTrancition(e) {
-  Array.from(keys).map((item) => {
-    if (item.classList[1] == 'keys__kilcked') {
-      item.classList.remove("keys__kilcked");
-    }
-  });
+  if (e.target.classList.contains("keys__item")) {
+    setTimeout(() => {
+      e.target.classList.remove("keys__kilcked");
+    }, 10);
+  }
 }
 
-
-window.addEventListener('transitionend', deleteTrancition)
-window.addEventListener("keydown", playSound);
+window.addEventListener("transitionend", deleteTrancition);
+window.addEventListener("keypress", playSound);
